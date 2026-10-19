@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulación de modulación AM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"></script>
+  <style>
+    :root {
+      --bg: #e7ebf0;
+      --panel: #ffffff;
+      --ink: #1a2332;
+      --muted: #5c6b7e;
+      --line: #d3dae3;
+      --navy: #10243f;
+      --accent: #0b6e99;
+      --ok: #146c43;
+      --ok-bg: #e7f6ee;
+      --warn: #9f1239;
+      --warn-bg: #fde8ee;
+      --amber: #9a3412;
+      --amber-bg: #fff4e8;
+      --shadow: 0 1px 2px rgba(16, 36, 63, 0.06), 0 8px 24px rgba(16, 36, 63, 0.05);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--navy);
+      color: #f4f7fb;
+      padding: 14px 22px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    header p {
+      margin: 4px 0 0;
+      color: #b7c5d6;
+      font-size: 13px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      flex: 1 0 100%;
+    }
+
+    .tab {
+      appearance: none;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: transparent;
+      color: #d5e2f0;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 8px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+
+    .tab.active {
+      background: #f4f7fb;
+      color: var(--navy);
+      border-color: #f4f7fb;
+    }
+
+    .header-meta {
+      font-family: "Roboto Mono", ui-monospace, monospace;
+      font-size: 12px;
+      color: #d5e2f0;
+      text-align: right;
+      line-height: 1.55;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 18px;
+      padding: 18px;
+      align-items: start;
+    }
+
+    .layout.off { display: none; }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+    }
+
+    .sidebar {
+      padding: 16px 16px 18px;
+      position: sticky;
+      top: 18px;
+    }
+
+    .panel-title {
+      margin: 0 0 12px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .field { margin-bottom: 14px; }
+
+    .field-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 6px;
+      gap: 8px;
+    }
+
+    .field-head label { font-size: 13px; font-weight: 500; }
+
+    .unit {
+      font-size: 11px;
+      color: var(--muted);
+      font-family: "Roboto Mono", ui-monospace, monospace;
+    }
+
+    .control {
+      display: grid;
+      grid-template-columns: 1fr 84px;
+      gap: 10px;
+      align-items: center;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      height: 32px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 0 8px;
+      font-family: "Roboto Mono", ui-monospace, monospace;
+      font-size: 13px;
+      color: var(--ink);
+      background: #f8fafc;
+    }
+
+    input[type="number"]:focus {
+      outline: 2px solid rgba(11, 110, 153, 0.25);
+      border-color: var(--accent);
+    }
+
+    .mu-card, .regime-card {
+      margin-top: 8px;
+      border-radius: 8px;
+      padding: 14px;
+      background: var(--ok-bg);
+      border: 1px solid #b7e4cb;
+    }
+
+    .mu-card.over, .regime-card.clip {
+      background: var(--warn-bg);
+      border-color: #f3b4c4;
+    }
+
+    .regime-card.ripple {
+      background: var(--amber-bg);
+      border-color: #f3d2b0;
+    }
+
+    .mu-label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .mu-value {
+      font-family: "Roboto Mono", ui-monospace, monospace;
+      font-size: 40px;
+      font-weight: 500;
+      line-height: 1.1;
+      margin: 4px 0;
+      color: var(--ok);
+    }
+
+    .mu-card.over .mu-value, .regime-card.clip .mu-value { color: var(--warn); }
+    .regime-card.ripple .mu-value { color: var(--amber); }
+
+    .mu-formula, .regime-detail {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .mu-status {
+      margin-top: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ok);
+    }
+
+    .mu-card.over .mu-status, .regime-card.clip .mu-status { color: var(--warn); }
+    .regime-card.ripple .mu-status { color: var(--amber); }
+
+    .group-gap { margin-top: 18px; }
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      min-width: 0;
+    }
+
+    .math-panel, .chart-card, .diagram-panel { padding: 16px 18px 14px; }
+
+    .eq-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 22px;
+    }
+
+    .eq {
+      background: #f7f9fb;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 12px;
+      overflow-x: auto;
+      min-height: 52px;
+    }
+
+    .eq.wide { grid-column: 1 / -1; }
+    .eq .katex { font-size: 1.02em; }
+    .eq .katex-display { margin: 0.35em 0; }
+
+    .chart-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .chart-head h2 {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .legend span { display: inline-flex; align-items: center; gap: 6px; }
+
+    .swatch {
+      width: 18px;
+      height: 0;
+      border-top: 2px solid currentColor;
+      display: inline-block;
+    }
+
+    .swatch.dashed { border-top-style: dashed; }
+
+    canvas {
+      width: 100%;
+      height: 220px;
+      display: block;
+    }
+
+    #spectrum { height: 280px; }
+
+    .readout {
+      margin: 8px 0 0;
+      font-size: 12px;
+      color: var(--muted);
+      font-family: "Roboto Mono", ui-monospace, monospace;
+    }
+
+    .chain {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 8px;
+    }
+
+    .block {
+      min-width: 112px;
+      max-width: 150px;
+      border: 1px solid #c5d0dc;
+      background: #f8fafc;
+      border-radius: 8px;
+      padding: 10px 10px 8px;
+      cursor: help;
+    }
+
+    .block:hover, .block:focus {
+      border-color: var(--accent);
+      background: #f3f8fb;
+      outline: none;
+    }
+
+    .block.hot {
+      border-color: #b45309;
+      background: #fff8f1;
+    }
+
+    .block strong {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .block em {
+      display: block;
+      margin-top: 4px;
+      font-style: normal;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .arrow {
+      width: 22px;
+      height: 2px;
+      background: #64788d;
+      margin-bottom: 28px;
+      position: relative;
+      flex: 0 0 auto;
+    }
+
+    .arrow::after {
+      content: "";
+      position: absolute;
+      right: -1px;
+      top: -4px;
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      border-left: 7px solid #64788d;
+    }
+
+    .mod-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .v-arrow {
+      width: 2px;
+      height: 16px;
+      background: #64788d;
+      position: relative;
+    }
+
+    .v-arrow::after {
+      content: "";
+      position: absolute;
+      left: -4px;
+      bottom: -1px;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 7px solid #64788d;
+    }
+
+    .tip {
+      position: fixed;
+      z-index: 30;
+      max-width: 280px;
+      background: var(--navy);
+      color: #f4f7fb;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      line-height: 1.4;
+      pointer-events: none;
+      box-shadow: 0 8px 24px rgba(16, 36, 63, 0.25);
+    }
+
+    @media (max-width: 980px) {
+      header { grid-template-columns: 1fr; }
+      .header-meta { text-align: left; }
+      .tabs { flex-wrap: wrap; }
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .eq-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Simulación de modulación de amplitud</h1>
+      <p>Modelo matemático y detector de envolvente</p>
+    </div>
+    <nav class="tabs" aria-label="Fases del sistema">
+      <button type="button" class="tab active" id="tab-a">Fase A: Modelo matemático</button>
+      <button type="button" class="tab" id="tab-b">Fase B: Implementación hardware</button>
+    </nav>
+    <div class="header-meta" id="header-meta">μ = —</div>
+  </header>
+
+  <div class="layout" id="view-a">
+    <aside class="panel sidebar">
+      <h2 class="panel-title">Parámetros</h2>
+      <div id="signal-controls-a"></div>
+      <div class="mu-card" id="mu-card">
+        <div class="mu-label">Índice de modulación μ</div>
+        <div class="mu-value" id="mu-value">0.600</div>
+        <div class="mu-formula">μ = V<sub>m</sub> / V<sub>c</sub></div>
+        <div class="mu-status" id="mu-status">Modulación normal</div>
+      </div>
+    </aside>
+
+    <main class="content">
+      <section class="panel math-panel">
+        <h2 class="panel-title">Modelo matemático</h2>
+        <div class="eq-grid">
+          <div class="eq" id="eq-vm"></div>
+          <div class="eq" id="eq-vc"></div>
+          <div class="eq wide" id="eq-am"></div>
+          <div class="eq wide" id="eq-exp"></div>
+        </div>
+      </section>
+
+      <section class="panel chart-card">
+        <div class="chart-head">
+          <h2>Mensaje · v<sub>m</sub>(t)</h2>
+          <div class="legend"><span style="color:#0e7490"><i class="swatch"></i>v<sub>m</sub>(t)</span></div>
+        </div>
+        <canvas id="chart-vm"></canvas>
+      </section>
+
+      <section class="panel chart-card">
+        <div class="chart-head">
+          <h2>Portadora · v<sub>c</sub>(t)</h2>
+          <div class="legend"><span style="color:#0f7a4a"><i class="swatch"></i>v<sub>c</sub>(t)</span></div>
+        </div>
+        <canvas id="chart-vc"></canvas>
+      </section>
+
+      <section class="panel chart-card">
+        <div class="chart-head">
+          <h2>Señal modulada · v<sub>AM</sub>(t)</h2>
+          <div class="legend">
+            <span style="color:#9a3412"><i class="swatch"></i>v<sub>AM</sub>(t)</span>
+            <span style="color:#b45309"><i class="swatch dashed"></i>envolvente ±[V<sub>c</sub> + v<sub>m</sub>(t)]</span>
+          </div>
+        </div>
+        <canvas id="chart-am"></canvas>
+        <p class="readout" id="time-readout"></p>
+      </section>
+
+      <section class="panel chart-card">
+        <div class="chart-head">
+          <h2>Espectro de v<sub>AM</sub>(t)</h2>
+          <div class="legend">
+            <span>LSB · (μ V<sub>c</sub>)/2</span>
+            <span>Portadora · V<sub>c</sub></span>
+            <span>USB · (μ V<sub>c</sub>)/2</span>
+          </div>
+        </div>
+        <canvas id="spectrum"></canvas>
+        <p class="readout" id="spec-readout"></p>
+      </section>
+    </main>
+  </div>
+
+  <div class="layout off" id="view-b">
+    <aside class="panel sidebar">
+      <h2 class="panel-title">Detector de envolvente</h2>
+      <div class="field">
+        <div class="field-head">
+          <label for="R-num">R · resistencia</label>
+          <span class="unit">kΩ</span>
+        </div>
+        <div class="control">
+          <input id="R-range" data-log="R" data-role="range" type="range" min="0" max="1000" step="1" value="1000" aria-label="Deslizador de R">
+          <input id="R-num" data-log="R" data-role="number" type="number" min="1" max="100" step="0.1" value="100">
+        </div>
+      </div>
+      <div class="field">
+        <div class="field-head">
+          <label for="C-num">C · capacitancia</label>
+          <span class="unit">nF</span>
+        </div>
+        <div class="control">
+          <input id="C-range" data-log="C" data-role="range" type="range" min="0" max="1000" step="1" value="1000" aria-label="Deslizador de C">
+          <input id="C-num" data-log="C" data-role="number" type="number" min="1" max="100" step="0.1" value="100">
+        </div>
+      </div>
+      <div class="regime-card" id="regime-card">
+        <div class="mu-label">Constante de tiempo τ</div>
+        <div class="mu-value" id="tau-value">10.00 ms</div>
+        <div class="mu-formula">τ = R · C</div>
+        <div class="mu-status" id="regime-status">Recuperación óptima</div>
+        <p class="regime-detail" id="regime-detail"></p>
+      </div>
+
+      <h2 class="panel-title group-gap">Señal de entrada</h2>
+      <div id="signal-controls-b"></div>
+    </aside>
+
+    <main class="content">
+      <section class="panel diagram-panel">
+        <h2 class="panel-title">Diagrama de bloques</h2>
+        <div class="chain">
+          <div class="block" tabindex="0" data-tip="Genera la señal moduladora vm(t): el tono o la voz de baja frecuencia que se va a transmitir.">
+            <strong>Oscilador de audio</strong>
+            <em>mensaje vm(t)</em>
+          </div>
+          <div class="arrow"></div>
+          <div class="mod-wrap">
+            <div class="block" tabindex="0" data-tip="Genera la portadora vc(t), una senoide estable de frecuencia fc. Entra al modulador por la vía de RF.">
+              <strong>Oscilador RF</strong>
+              <em>portadora vc(t)</em>
+            </div>
+            <div class="v-arrow"></div>
+            <div class="block" tabindex="0" data-tip="Multiplica el mensaje por la portadora. La amplitud de la RF sigue a vm(t) y a la salida se obtiene vAM(t).">
+              <strong>Modulador</strong>
+              <em>entra la RF</em>
+            </div>
+          </div>
+          <div class="arrow"></div>
+          <div class="block" tabindex="0" data-tip="Camino entre transmisor y receptor. En el prototipo puede ser un cable de protoboard o una antena.">
+            <strong>Canal</strong>
+            <em>medio de transmisión</em>
+          </div>
+          <div class="arrow"></div>
+          <div class="block" tabindex="0" data-tip="Filtro pasa banda sintonizado en fc. Deja pasar la señal AM y atenúa las frecuencias ajenas a la portadora.">
+            <strong>Filtro RF</strong>
+            <em>pasa banda</em>
+          </div>
+          <div class="arrow"></div>
+          <div class="block hot" tabindex="0" data-tip="El diodo recorta la semionda negativa. El capacitor se carga en los picos y se descarga por R con τ = RC, recuperando la envolvente.">
+            <strong>Detector de envolvente</strong>
+            <em>diodo + RC</em>
+          </div>
+          <div class="arrow"></div>
+          <div class="block" tabindex="0" data-tip="Aumenta la potencia de la señal recuperada para poder excitar el parlante.">
+            <strong>Amplificador</strong>
+            <em>audio de salida</em>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel math-panel">
+        <h2 class="panel-title">Detector</h2>
+        <div class="eq-grid">
+          <div class="eq" id="eq-rect"></div>
+          <div class="eq" id="eq-tau"></div>
+          <div class="eq wide" id="eq-discharge"></div>
+        </div>
+      </section>
+
+      <section class="panel chart-card">
+        <div class="chart-head">
+          <h2>Entrada AM</h2>
+          <div class="legend"><span style="color:#9a3412"><i class="swatch"></i>v<sub>AM</sub>(t)</span></div>
+        </div>
+        <canvas id="chart-rx"></canvas>
+      </section>
+
+      <section class="panel chart-card">
+        <div class="chart-head">
+          <h2>Salida del diodo rectificador</h2>
+          <div class="legend"><span style="color:#0b6e99"><i class="swatch"></i>máx(v<sub>AM</sub>, 0)</span></div>
+        </div>
+        <canvas id="chart-diode"></canvas>
+      </section>
+
+      <section class="panel chart-card">
+        <div class="chart-head">
+          <h2>Salida del filtro RC</h2>
+          <div class="legend">
+            <span style="color:#10243f"><i class="swatch"></i>v<sub>o</sub>(t)</span>
+            <span style="color:#b45309"><i class="swatch dashed"></i>envolvente positiva</span>
+          </div>
+        </div>
+        <canvas id="chart-rc"></canvas>
+        <p class="readout" id="demod-readout"></p>
+      </section>
+    </main>
+  </div>
+
+  <div class="tip" id="tip" hidden></div>
+
+  <script>
+    const LINEAR = {
+      fm: { min: 1, max: 50, step: 0.1, digits: 1, unit: "Hz", label: "f<sub>m</sub> · frecuencia del mensaje" },
+      Vm: { min: 0, max: 10, step: 0.01, digits: 2, unit: "V", label: "V<sub>m</sub> · amplitud del mensaje" },
+      fc: { min: 100, max: 500, step: 1, digits: 0, unit: "Hz", label: "f<sub>c</sub> · frecuencia de la portadora" },
+      Vc: { min: 1, max: 10, step: 0.01, digits: 2, unit: "V", label: "V<sub>c</sub> · amplitud de la portadora" }
+    };
+
+    const LOGS = {
+      R: { min: 1e3, max: 1e5, toDisp: (v) => v / 1e3, fromDisp: (v) => v * 1e3, digits: 2 },
+      C: { min: 1e-9, max: 100e-9, toDisp: (v) => v * 1e9, fromDisp: (v) => v * 1e-9, digits: 2 }
+    };
+
+    const state = { fm: 10, Vm: 3, fc: 200, Vc: 5, R: 1e5, C: 100e-9 };
+    let view = "a";
+    let frame = 0;
+    let wave = null;
+
+    function fieldMarkup(key, suffix) {
+      const spec = LINEAR[key];
+      const value = state[key].toFixed(spec.digits);
+      return (
+        '<div class="field">' +
+          '<div class="field-head"><label>' + spec.label + '</label><span class="unit">' + spec.unit + '</span></div>' +
+          '<div class="control">' +
+            '<input data-param="' + key + '" data-role="range" data-set="' + suffix + '" type="range" min="' + spec.min + '" max="' + spec.max + '" step="' + spec.step + '" value="' + state[key] + '" aria-label="' + key + '">' +
+            '<input data-param="' + key + '" data-role="number" data-set="' + suffix + '" type="number" min="' + spec.min + '" max="' + spec.max + '" step="' + spec.step + '" value="' + value + '">' +
+          '</div>' +
+        '</div>'
+      );
+    }
+
+    document.getElementById("signal-controls-a").innerHTML = ["fm", "Vm", "fc", "Vc"].map((key) => fieldMarkup(key, "a")).join("");
+    document.getElementById("signal-controls-b").innerHTML = ["fm", "Vm", "fc", "Vc"].map((key) => fieldMarkup(key, "b")).join("");
+
+    function clampLinear(key, value) {
+      const spec = LINEAR[key];
+      let v = Number(value);
+      if (!Number.isFinite(v)) v = state[key];
+      v = Math.min(spec.max, Math.max(spec.min, v));
+      return Number((Math.round(v / spec.step) * spec.step).toFixed(spec.digits));
+    }
+
+    function syncLinear(key) {
+      const spec = LINEAR[key];
+      document.querySelectorAll('[data-param="' + key + '"]').forEach((el) => {
+        if (el.dataset.role === "number" && document.activeElement === el) return;
+        el.value = el.dataset.role === "number" ? state[key].toFixed(spec.digits) : String(state[key]);
+      });
+    }
+
+    document.querySelectorAll("[data-param]").forEach((el) => {
+      const key = el.dataset.param;
+      el.addEventListener("input", () => {
+        state[key] = clampLinear(key, el.value);
+        syncLinear(key);
+        schedule();
+      });
+      if (el.dataset.role === "number") {
+        el.addEventListener("change", () => {
+          el.value = state[key].toFixed(LINEAR[key].digits);
+        });
+      }
+    });
+
+    function logFromSlider(key, pos) {
+      const spec = LOGS[key];
+      const t = Number(pos) / 1000;
+      return Math.exp(Math.log(spec.min) + t * (Math.log(spec.max) - Math.log(spec.min)));
+    }
+
+    function sliderFromLog(key, value) {
+      const spec = LOGS[key];
+      const clamped = Math.min(spec.max, Math.max(spec.min, value));
+      return Math.round(1000 * (Math.log(clamped) - Math.log(spec.min)) / (Math.log(spec.max) - Math.log(spec.min)));
+    }
+
+    function syncLog(key) {
+      const spec = LOGS[key];
+      const range = document.getElementById(key + "-range");
+      const number = document.getElementById(key + "-num");
+      range.value = String(sliderFromLog(key, state[key]));
+      if (document.activeElement !== number) number.value = spec.toDisp(state[key]).toFixed(spec.digits);
+    }
+
+    Object.keys(LOGS).forEach((key) => {
+      const spec = LOGS[key];
+      const range = document.getElementById(key + "-range");
+      const number = document.getElementById(key + "-num");
+      range.addEventListener("input", () => {
+        state[key] = logFromSlider(key, range.value);
+        syncLog(key);
+        schedule();
+      });
+      number.addEventListener("input", () => {
+        let shown = Number(number.value);
+        if (!Number.isFinite(shown)) return;
+        shown = Math.min(spec.toDisp(spec.max), Math.max(spec.toDisp(spec.min), shown));
+        state[key] = spec.fromDisp(shown);
+        range.value = String(sliderFromLog(key, state[key]));
+        schedule();
+      });
+      number.addEventListener("change", () => syncLog(key));
+      syncLog(key);
+    });
+
+    function schedule() {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        render();
+      });
+    }
+
+    function showView(next) {
+      view = next;
+      document.getElementById("view-a").classList.toggle("off", next !== "a");
+      document.getElementById("view-b").classList.toggle("off", next !== "b");
+      document.getElementById("tab-a").classList.toggle("active", next === "a");
+      document.getElementById("tab-b").classList.toggle("active", next === "b");
+      schedule();
+    }
+
+    document.getElementById("tab-a").addEventListener("click", () => showView("a"));
+    document.getElementById("tab-b").addEventListener("click", () => showView("b"));
+
+    const tip = document.getElementById("tip");
+    document.querySelectorAll(".block").forEach((block) => {
+      const place = (event) => {
+        tip.hidden = false;
+        tip.textContent = block.dataset.tip;
+        const x = Math.min(event.clientX + 14, window.innerWidth - 300);
+        const y = Math.min(event.clientY + 16, window.innerHeight - 90);
+        tip.style.left = x + "px";
+        tip.style.top = y + "px";
+      };
+      block.addEventListener("mouseenter", place);
+      block.addEventListener("mousemove", place);
+      block.addEventListener("mouseleave", () => { tip.hidden = true; });
+      block.addEventListener("focus", () => {
+        const rect = block.getBoundingClientRect();
+        tip.hidden = false;
+        tip.textContent = block.dataset.tip;
+        tip.style.left = Math.min(rect.left, window.innerWidth - 300) + "px";
+        tip.style.top = (rect.bottom + 8) + "px";
+      });
+      block.addEventListener("blur", () => { tip.hidden = true; });
+    });
+
+    function buildWave() {
+      const { fm, Vm, fc, Vc } = state;
+      const samplesPerCycle = 36;
+      let duration = 3 / fm;
+      let n = Math.ceil(duration * fc * samplesPerCycle);
+      if (n < 2000) n = 2000;
+      if (n > 8000) {
+        n = 8000;
+        duration = n / (fc * samplesPerCycle);
+      }
+      const fs = (n - 1) / duration;
+      const t = new Float64Array(n);
+      const vm = new Float64Array(n);
+      const vc = new Float64Array(n);
+      const vam = new Float64Array(n);
+      const env = new Float64Array(n);
+      const envNeg = new Float64Array(n);
+      const envPos = new Float64Array(n);
+      const rect = new Float64Array(n);
+      const twoPi = 2 * Math.PI;
+      for (let i = 0; i < n; i++) {
+        const ti = i / fs;
+        const message = Vm * Math.cos(twoPi * fm * ti);
+        const carrier = Math.cos(twoPi * fc * ti);
+        const envelope = Vc + message;
+        t[i] = ti;
+        vm[i] = message;
+        vc[i] = Vc * carrier;
+        env[i] = envelope;
+        envNeg[i] = -envelope;
+        envPos[i] = Math.max(0, envelope);
+        vam[i] = envelope * carrier;
+        rect[i] = vam[i] > 0 ? vam[i] : 0;
+      }
+      const tau = state.R * state.C;
+      const recovered = recoverTrace(t[n - 1], fm, Vm, fc, Vc, tau);
+      return { t, vm, vc, vam, env, envNeg, envPos, rect, recovered, duration: t[n - 1], fs, n, tau };
+    }
+
+    function recoverTrace(tEnd, fm, Vm, fc, Vc, tau) {
+      const half = 0.5 / fc;
+      const tauSafe = Math.max(tau, 1e-12);
+      const steps = 8;
+      const ts = [];
+      const vs = [];
+      let v = 0;
+      let cursor = 0;
+      const last = Math.floor(tEnd / half + 1e-9);
+      for (let k = 0; k <= last; k++) {
+        const tp = k * half;
+        const dt = tp - cursor;
+        if (dt > 0) v *= Math.exp(-dt / tauSafe);
+        const envP = Vc + Vm * Math.cos(2 * Math.PI * fm * tp);
+        const crest = envP * (k % 2 === 0 ? 1 : -1);
+        if (crest > v) v = crest;
+        ts.push(tp);
+        vs.push(v);
+        const tNext = Math.min(tEnd, (k + 1) * half);
+        const span = tNext - tp;
+        for (let s = 1; s <= steps; s++) {
+          const tq = tp + span * (s / steps);
+          ts.push(tq);
+          vs.push(v * Math.exp(-(tq - tp) / tauSafe));
+        }
+        v *= Math.exp(-span / tauSafe);
+        cursor = tNext;
+      }
+      return { t: Float64Array.from(ts), v: Float64Array.from(vs) };
+    }
+
+    function niceStep(span, targetCount) {
+      const rough = span / Math.max(1, targetCount);
+      const mag = Math.pow(10, Math.floor(Math.log10(rough)));
+      const norm = rough / mag;
+      const nice = norm >= 7.5 ? 10 : norm >= 3.5 ? 5 : norm >= 1.5 ? 2 : 1;
+      return nice * mag;
+    }
+
+    function ticks(min, max, targetCount) {
+      const span = max - min || 1;
+      const step = niceStep(span, targetCount);
+      const start = Math.ceil((min - step * 1e-9) / step) * step;
+      const out = [];
+      for (let v = start; v <= max + step * 1e-6; v += step) out.push(Number(v.toPrecision(12)));
+      return { step, values: out };
+    }
+
+    function formatTick(value, step) {
+      const abs = Math.abs(value);
+      if (abs !== 0 && abs < 1e-3) return value.toExponential(1);
+      const digits = step >= 1 ? 0 : step >= 0.1 ? 1 : step >= 0.01 ? 2 : 3;
+      return value.toFixed(digits);
+    }
+
+    function formatTau(tau) {
+      if (tau < 1e-3) return (tau * 1e6).toFixed(2) + " μs";
+      if (tau < 1) return (tau * 1e3).toFixed(2) + " ms";
+      return tau.toFixed(3) + " s";
+    }
+
+    function setupCanvas(canvas) {
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      const width = Math.max(10, rect.width);
+      const height = Math.max(10, rect.height);
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      const ctx = canvas.getContext("2d");
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return { ctx, width, height };
+    }
+
+    function strokeSmooth(ctx, t, data, xOf, yOf) {
+      ctx.lineJoin = "round";
+      ctx.lineCap = "round";
+      ctx.moveTo(xOf(t[0]), yOf(data[0]));
+      for (let i = 1; i < data.length; i++) ctx.lineTo(xOf(t[i]), yOf(data[i]));
+    }
+
+    function drawWave(canvas, series, xMax, yMin, yMax) {
+      if (canvas.clientWidth < 40) return;
+      const { ctx, width, height } = setupCanvas(canvas);
+      const pad = { l: 54, r: 16, t: 18, b: 36 };
+      const plotW = width - pad.l - pad.r;
+      const plotH = height - pad.t - pad.b;
+      const span = (yMax - yMin) || 1;
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, width, height);
+      const xTicks = ticks(0, xMax, Math.max(4, Math.floor(plotW / 90)));
+      const yTicks = ticks(yMin, yMax, 5);
+      const xOf = (x) => pad.l + (x / (xMax || 1e-9)) * plotW;
+      const yOf = (y) => pad.t + (1 - (y - yMin) / span) * plotH;
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(pad.l, pad.t, plotW, plotH);
+      ctx.clip();
+      ctx.strokeStyle = "#e6ebf1";
+      ctx.lineWidth = 1;
+      xTicks.values.forEach((v) => {
+        ctx.beginPath();
+        ctx.moveTo(xOf(v), pad.t);
+        ctx.lineTo(xOf(v), pad.t + plotH);
+        ctx.stroke();
+      });
+      yTicks.values.forEach((v) => {
+        ctx.beginPath();
+        ctx.moveTo(pad.l, yOf(v));
+        ctx.lineTo(pad.l + plotW, yOf(v));
+        ctx.stroke();
+      });
+      series.forEach((line) => {
+        ctx.beginPath();
+        ctx.strokeStyle = line.color;
+        ctx.lineWidth = line.width || 1.5;
+        ctx.setLineDash(line.dash || []);
+        strokeSmooth(ctx, line.t, line.data, xOf, yOf);
+        ctx.stroke();
+      });
+      ctx.restore();
+
+      ctx.strokeStyle = "#9aa8b8";
+      ctx.lineWidth = 1;
+      ctx.setLineDash([]);
+      ctx.strokeRect(pad.l, pad.t, plotW, plotH);
+      ctx.fillStyle = "#5c6b7e";
+      ctx.font = "12px Roboto, Helvetica, Arial, sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "top";
+      xTicks.values.forEach((v) => ctx.fillText(formatTick(v, xTicks.step), xOf(v), pad.t + plotH + 8));
+      ctx.fillText("t (s)", pad.l + plotW / 2, height - 14);
+      ctx.textAlign = "right";
+      ctx.textBaseline = "middle";
+      yTicks.values.forEach((v) => ctx.fillText(formatTick(v, yTicks.step), pad.l - 8, yOf(v)));
+      ctx.textAlign = "left";
+      ctx.textBaseline = "bottom";
+      ctx.fillText("V", pad.l + 6, pad.t - 2);
+    }
+
+    function drawSpectrum(canvas, mu) {
+      if (canvas.clientWidth < 40) return;
+      const { fm, fc, Vc } = state;
+      const { ctx, width, height } = setupCanvas(canvas);
+      const pad = { l: 54, r: 16, t: 36, b: 42 };
+      const plotW = width - pad.l - pad.r;
+      const plotH = height - pad.t - pad.b;
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, width, height);
+      const lsbF = fc - fm;
+      const usbF = fc + fm;
+      const lsbA = (mu * Vc) / 2;
+      const tones = [
+        { f: lsbF, a: lsbA, name: "LSB", color: "#0b6e99" },
+        { f: fc, a: Vc, name: "Portadora", color: "#10243f" },
+        { f: usbF, a: lsbA, name: "USB", color: "#0b6e99" }
+      ];
+      const margin = Math.max(8, fm * 0.85);
+      const xMin = Math.max(0, lsbF - margin);
+      const xMax = usbF + margin;
+      const yMax = Math.max(Vc, lsbA, 0.001) * 1.25;
+      const xOf = (x) => pad.l + ((x - xMin) / (xMax - xMin)) * plotW;
+      const yOf = (y) => pad.t + (1 - y / yMax) * plotH;
+      const xTicks = ticks(xMin, xMax, Math.max(4, Math.floor(plotW / 100)));
+      const yTicks = ticks(0, yMax, 5);
+      ctx.strokeStyle = "#e6ebf1";
+      ctx.lineWidth = 1;
+      xTicks.values.forEach((v) => {
+        ctx.beginPath();
+        ctx.moveTo(xOf(v), pad.t);
+        ctx.lineTo(xOf(v), pad.t + plotH);
+        ctx.stroke();
+      });
+      yTicks.values.forEach((v) => {
+        if (v < 0) return;
+        ctx.beginPath();
+        ctx.moveTo(pad.l, yOf(v));
+        ctx.lineTo(pad.l + plotW, yOf(v));
+        ctx.stroke();
+      });
+      ctx.strokeStyle = "#9aa8b8";
+      ctx.strokeRect(pad.l, pad.t, plotW, plotH);
+      const stemX = tones.map((tone) => xOf(tone.f));
+      const crowded = stemX[1] - stemX[0] < 88 || stemX[2] - stemX[1] < 88;
+      tones.forEach((tone, index) => {
+        const x = stemX[index];
+        const y = yOf(tone.a);
+        ctx.strokeStyle = tone.color;
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.moveTo(x, yOf(0));
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        ctx.fillStyle = tone.color;
+        ctx.beginPath();
+        ctx.arc(x, y, 4.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.font = "12px Roboto, Helvetica, Arial, sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "bottom";
+        const lift = crowded ? 8 + (2 - index) * 14 : 8;
+        ctx.fillText(tone.a.toFixed(2) + " V", x, y - lift);
+        if (!crowded) ctx.fillText(tone.name, x, y - lift - 14);
+      });
+      ctx.fillStyle = "#5c6b7e";
+      ctx.font = "12px Roboto, Helvetica, Arial, sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "top";
+      xTicks.values.forEach((v) => ctx.fillText(formatTick(v, xTicks.step), xOf(v), pad.t + plotH + 8));
+      ctx.fillText("frecuencia (Hz)", pad.l + plotW / 2, height - 16);
+      ctx.textAlign = "right";
+      ctx.textBaseline = "middle";
+      yTicks.values.forEach((v) => {
+        if (v < -1e-9) return;
+        ctx.fillText(formatTick(v, yTicks.step), pad.l - 8, yOf(Math.max(0, v)));
+      });
+      ctx.textAlign = "left";
+      ctx.textBaseline = "bottom";
+      ctx.fillText("V", pad.l + 6, pad.t - 2);
+    }
+
+    function tex(id, expression) {
+      const node = document.getElementById(id);
+      if (!node) return;
+      if (window.katex) katex.render(expression, node, { throwOnError: false, displayMode: true });
+      else node.textContent = expression;
+    }
+
+    function renderMath(mu) {
+      const fm = state.fm.toFixed(1);
+      const Vm = state.Vm.toFixed(2);
+      const fc = state.fc.toFixed(0);
+      const Vc = state.Vc.toFixed(2);
+      const side = ((mu * state.Vc) / 2).toFixed(3);
+      const tau = wave.tau;
+      tex("eq-vm", "\\begin{aligned} v_m(t) &= V_m\\cos(2\\pi f_m t) \\\\ &= " + Vm + "\\cos(2\\pi\\cdot " + fm + "\\,t) \\end{aligned}");
+      tex("eq-vc", "\\begin{aligned} v_c(t) &= V_c\\cos(2\\pi f_c t) \\\\ &= " + Vc + "\\cos(2\\pi\\cdot " + fc + "\\,t) \\end{aligned}");
+      tex("eq-am", "\\begin{aligned} v_{AM}(t) &= \\big[V_c + V_m\\cos(2\\pi f_m t)\\big]\\cos(2\\pi f_c t) \\\\ &= \\big[" + Vc + " + " + Vm + "\\cos(2\\pi\\cdot " + fm + "\\,t)\\big]\\cos(2\\pi\\cdot " + fc + "\\,t) \\end{aligned}");
+      tex("eq-exp", "\\begin{aligned} v_{AM}(t) &= V_c\\cos(2\\pi f_c t)+\\frac{\\mu V_c}{2}\\cos\\big(2\\pi(f_c-f_m)t\\big)+\\frac{\\mu V_c}{2}\\cos\\big(2\\pi(f_c+f_m)t\\big) \\\\ &= " + Vc + "\\cos(2\\pi\\cdot " + fc + "\\,t)+" + side + "\\cos(2\\pi\\cdot " + (state.fc - state.fm).toFixed(1) + "\\,t)+" + side + "\\cos(2\\pi\\cdot " + (state.fc + state.fm).toFixed(1) + "\\,t) \\end{aligned}");
+      tex("eq-rect", "v_{d}(t)=\\max\\big(v_{AM}(t),\\,0\\big)");
+      tex("eq-tau", "\\tau=RC=" + formatTau(tau).replace("μ", "\\mu ").replace(" ", "\\,"));
+      tex("eq-discharge", "v_o(t)=V_p\\,e^{-(t-t_p)/\\tau}\\quad\\text{entre picos positivos de la portadora}");
+    }
+
+    function clipLimit(mu) {
+      if (mu <= 0.02) return Infinity;
+      if (mu >= 1) return 0;
+      return Math.sqrt(Math.max(0, 1 - mu * mu)) / (mu * 2 * Math.PI * state.fm);
+    }
+
+    function classify(mu, tau) {
+      if (mu > 1) {
+        return {
+          key: "clip",
+          title: "Sobremodulación",
+          detail: "La envolvente cruza por cero. El diodo sigue |Vc + vm(t)| y no devuelve el mensaje original."
+        };
+      }
+      const limit = clipLimit(mu);
+      const drop = 1 - Math.exp(-(1 / state.fc) / Math.max(tau, 1e-12));
+      if (Number.isFinite(limit) && tau > limit) {
+        return {
+          key: "clip",
+          title: "Corte diagonal",
+          detail: "τ supera el límite de seguimiento (" + formatTau(limit) + "). El capacitor no alcanza a bajar con la envolvente."
+        };
+      }
+      if (drop > 0.55) {
+        return {
+          key: "ripple",
+          title: "Rizado de alta frecuencia",
+          detail: "En cada ciclo de la portadora el capacitor pierde cerca del " + Math.round(drop * 100) + " % de la carga. El rizado de RF queda sobre la onda."
+        };
+      }
+      return {
+        key: "ok",
+        title: "Recuperación óptima",
+        detail: "La descarga por ciclo es del " + Math.round(drop * 100) + " %. La salida sigue la envolvente. Límite de corte: " + (Number.isFinite(limit) ? formatTau(limit) : "no aplica") + "."
+      };
+    }
+
+    function renderMu(mu) {
+      const over = mu > 1 + 1e-9;
+      const card = document.getElementById("mu-card");
+      card.classList.toggle("over", over);
+      document.getElementById("mu-value").textContent = mu.toFixed(3);
+      document.getElementById("mu-status").textContent = over
+        ? "Sobremodulación"
+        : (Math.abs(mu - 1) <= 1e-9 ? "Modulación al 100 %" : "Modulación normal");
+    }
+
+    function renderRegime(mu, tau) {
+      const regime = classify(mu, tau);
+      const card = document.getElementById("regime-card");
+      card.classList.remove("ripple", "clip");
+      if (regime.key !== "ok") card.classList.add(regime.key);
+      document.getElementById("tau-value").textContent = formatTau(tau);
+      document.getElementById("regime-status").textContent = regime.title;
+      document.getElementById("regime-detail").textContent = regime.detail;
+      document.getElementById("header-meta").textContent =
+        "μ = " + mu.toFixed(3) + (mu > 1 ? "  ·  SOBREMODULACIÓN" : "") + "\nτ = " + formatTau(tau);
+    }
+
+    function render() {
+      const mu = state.Vm / state.Vc;
+      wave = buildWave();
+      renderMu(mu);
+      renderRegime(mu, wave.tau);
+      renderMath(mu);
+
+      const xMax = wave.duration || 1e-6;
+      const vmPad = Math.max(state.Vm, 0.5) * 1.15;
+      const vcPad = state.Vc * 1.15;
+      const amPad = (state.Vc + state.Vm) * 1.12 || 1;
+
+      if (view === "a") {
+        drawWave(document.getElementById("chart-vm"), [
+          { t: wave.t, data: wave.vm, color: "#0e7490", width: 1.7 }
+        ], xMax, -vmPad, vmPad);
+        drawWave(document.getElementById("chart-vc"), [
+          { t: wave.t, data: wave.vc, color: "#0f7a4a", width: 1.35 }
+        ], xMax, -vcPad, vcPad);
+        drawWave(document.getElementById("chart-am"), [
+          { t: wave.t, data: wave.env, color: "#b45309", width: 1.4, dash: [6, 4] },
+          { t: wave.t, data: wave.envNeg, color: "#b45309", width: 1.4, dash: [6, 4] },
+          { t: wave.t, data: wave.vam, color: "#9a3412", width: 1.25 }
+        ], xMax, -amPad, amPad);
+        drawSpectrum(document.getElementById("spectrum"), mu);
+        document.getElementById("time-readout").textContent =
+          "Ventana: 0 a " + wave.duration.toFixed(4) + " s   ·   " +
+          (wave.duration * state.fm).toFixed(2) + " ciclos de fm   ·   " +
+          wave.n + " muestras   ·   " + (wave.n / (wave.duration * state.fc)).toFixed(0) + " muestras por ciclo de fc";
+        const side = (mu * state.Vc) / 2;
+        document.getElementById("spec-readout").textContent =
+          "LSB " + (state.fc - state.fm).toFixed(1) + " Hz → " + side.toFixed(3) + " V    ·    " +
+          "Portadora " + state.fc.toFixed(0) + " Hz → " + state.Vc.toFixed(2) + " V    ·    " +
+          "USB " + (state.fc + state.fm).toFixed(1) + " Hz → " + side.toFixed(3) + " V    ·    " +
+          "BW = " + (2 * state.fm).toFixed(1) + " Hz";
+      } else {
+        drawWave(document.getElementById("chart-rx"), [
+          { t: wave.t, data: wave.vam, color: "#9a3412", width: 1.25 }
+        ], xMax, -amPad, amPad);
+        drawWave(document.getElementById("chart-diode"), [
+          { t: wave.t, data: wave.rect, color: "#0b6e99", width: 1.25 }
+        ], xMax, 0, amPad);
+        drawWave(document.getElementById("chart-rc"), [
+          { t: wave.t, data: wave.envPos, color: "#b45309", width: 1.4, dash: [6, 4] },
+          { t: wave.recovered.t, data: wave.recovered.v, color: "#10243f", width: 1.6 }
+        ], xMax, 0, amPad);
+        document.getElementById("demod-readout").textContent =
+          "R = " + (state.R / 1e3).toFixed(2) + " kΩ    ·    C = " + (state.C * 1e9).toFixed(2) +
+          " nF    ·    τ = " + formatTau(wave.tau) + "    ·    " + wave.n + " muestras";
+      }
+    }
+
+    window.addEventListener("resize", schedule);
+    new ResizeObserver(schedule).observe(document.body);
+
+    let katexWaits = 0;
+    function boot() {
+      if (!window.katex && katexWaits < 40) {
+        katexWaits += 1;
+        setTimeout(boot, 50);
+        return;
+      }
+      render();
+    }
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
+    else boot();
+  </script>
+</body>
+</html>
