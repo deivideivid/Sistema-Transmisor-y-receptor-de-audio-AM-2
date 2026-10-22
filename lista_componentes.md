@@ -21,4 +21,4 @@
 *   **Amplificador de Audio Final:**
     *   **Opción principal:** LM386.
 
-**Nota:** Puedes utilizar tu propio micrófono y bocina/parlante (8 Ω) para el proyecto.
+**Nota:** Vamos a utilizar un micrófono electret y una bocina/parlante (8 Ω) para el proyecto.
