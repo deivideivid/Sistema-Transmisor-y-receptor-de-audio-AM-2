@@ -14,7 +14,7 @@
 ## 2. Etapa de Recepción
 
 *   **Diodo Detector (Detector de Envolvente):**
-    *   **Opción principal:** 1N34A (Germanio) o 1N5711, BAT41 (Schottky).
+    *   **Opción principal:** 1N34A (Germanio) o 1N5711, BAT41, 1N5819 (Schottky).
     *   *Alternativa:* 1N4148 (Silicio - menos recomendado por su mayor caída de voltaje).
 *   **Filtro Pasa-Bajos (RC):**
     *   **Componentes necesarios:** Potenciómetro (ej. 10 kΩ o 100 kΩ) y capacitores (1 nF, 10 nF, 100 nF).
