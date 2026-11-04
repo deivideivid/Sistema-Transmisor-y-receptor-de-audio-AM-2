@@ -71,4 +71,10 @@ Usamos dos baterías de 9 V en serie para tener **+9 V, 0 V (tierra) y −9 V**.
 7.  **Reproducción:** el LM386 amplifica la voz recuperada y la manda al parlante.
 
 ## 7. Cómo vamos a evaluar el sistema
-Con el osciloscopio del laboratorio vamos a comparar la señal del micrófono (entrada) con la que llega al parlante (salida), medir el índice de modulación directamente en la envolvente y revisar el espectro de la señal AM para ver la portadora y las dos bandas laterales.
+La universidad no tiene osciloscopio, así que vamos a medir con herramientas que sí tenemos al alcance:
+
+*   **Tarjeta de sonido del PC como osciloscopio de audio:** con una tarjeta de sonido USB y un programa gratuito (Soundcard Oscilloscope o Audacity) vemos la voz original (salida del preamplificador) y la voz recuperada (salida del buffer del receptor), y las comparamos en el tiempo y en la frecuencia (FFT). La señal entra por un divisor de voltaje y un condensador para no pasarle más de 1 V a la tarjeta. Con esto cubrimos la comparación de fidelidad, ruido y ancho de banda del audio.
+*   **Radio AM comercial:** sintonizada en unos 1000 kHz, confirma que el transmisor está funcionando y que la voz se entiende.
+*   **Índice de modulación con multímetro y tono de prueba:** con un tono fijo en el micrófono, la salida del detector tiene una parte fija (que equivale a $V_c$) y una parte que sube y baja (que equivale a $V_m$). Midiendo la parte fija con el multímetro y la parte variable con la tarjeta de sonido, calculamos $\mu = V_m / V_c$.
+*   **Espectro de la señal AM (opcional):** con un receptor RTL-SDR conectado al PC se ve el espectro real alrededor de 1 MHz: la portadora y las dos bandas laterales en $f_c \pm f_m$.
+*   **Simulación:** las formas de onda que no podemos medir directamente (la portadora y la señal AM en el tiempo) se muestran con el dashboard del proyecto y una simulación del circuito.
