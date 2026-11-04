@@ -25,18 +25,19 @@
 
 
 
-| # | Componente | Valor / Referencia | Cantidad | Estado actual / Observación |
+| # | Componente / Material | Valor o Referencia | Cantidad | Estado actual / Observación |
 | :--- | :--- | :--- | :--- | :--- |
-| **1** | **Micrófono** | Electret (cables rojo/negro) | 1 | ¡Lo tienes! |
-| **2** | **Preamplificador** | IC **LM358P** (8 pines) | 2 | ¡Los tienes! |
-| **3** | **Modulador AM** | IC **CA3080E** (8 pines) | 1 | ¡Lo tienes! |
-| **4** | **Amplificador Audio**| IC **LM386N-1** (8 pines) | 1 | ¡Lo tienes! |
-| **5** | **Transistor NPN** | **2N2222A** | 2 | ¡Los tienes! |
-| **6** | **Cristal de Cuarzo** | **20 MHz** (Metálico) | 1 | ¡Lo tienes! (Ojo con las capacidades parásitas en protoboard) |
-| **7** | **Diodo Detector** | Germanio / Schottky | 1 | Lo tiene tu compañero |
-| **8** | **Diodos de Silicio** | 1N4148 (vidrio) | 2 | ¡Los tienes! |
-| **9** | **Potenciómetros** | **B10K** ($10\text{ k}\Omega$) y **B100K** ($100\text{ k}\Omega$) | 2 | ¡Los tienes! |
-| **10**| **Resistencias** | $10\text{ k}\Omega$ (Café-Negro-Naranja-Oro) | 1 | **¡FALTA! Comprar de 5 a 10 más variadas ($1\text{ k}\Omega$ a $100\text{ k}\Omega$)** |
-| **11**| **Capacitores Electrolíticos**| $1\ \mu\text{F}$, $10\ \mu\text{F}$, $100\ \mu\text{F}$ | 3 | ¡Los tienes! |
-| **12**| **Capacitores Cerámicos** | Tipo "lenteja" ($1\text{ nF}$ a $100\text{ nF}$) | 0 | **¡FALTA! Comprar para el filtro y desacoples** |
-| **13**| **Alimentación** | Baterías de **9V** + Clips | 2 | Las tiene tu compañero (para fuente dual $\pm 9\text{V}$) |
+| **1** | Protoboard | 1 larga (60 pines / 830 puntos) | 1 | ¡Lo tienes! (Suficiente para todo el sistema) |
+| **2** | Micrófono | Electret con cables (rojo/negro)[cite: 17] | 1 | ¡Lo tienes! |
+| **3** | Preamplificador | IC **LM358P** (8 pines)[cite: 18] | 2 | ¡Los tienes! |
+| **4** | Modulador AM | IC **CA3080E** (8 pines)[cite: 20, 26] | 1 | ¡Lo tienes! |
+| **5** | Amplificador Audio | IC **LM386N-1** (8 pines) + Parlante[cite: 16] | 1 | ¡Lo tienes! |
+| **6** | Oscilador RF | Transistor **2N2222A** + Cristal de **20 MHz**[cite: 12, 19] | 2 / 1 | ¡Lo tienes! |
+| **7** | Diodo Detector | Germanio (1N34A) o Schottky (1N5819) | 1 | Lo tiene tu compañero[cite: 3, 5] |
+| **8** | Diodos de Silicio | 2x **1N4148** (vidrio)[cite: 13] | 2 | ¡Los tienes! |
+| **9** | Potenciómetros | **B10K** ($10\text{ k}\Omega$) y **B100K** ($100\text{ k}\Omega$)[cite: 7, 9, 10] | 2 | ¡Los tienes! |
+| **10**| Resistencias fijas | $1\text{ k}\Omega$ (x3), $10\text{ k}\Omega$ (x4), $100\text{ k}\Omega$ (x3)[cite: 14] | 10 | **¡FALTA COMPRAR!** |
+| **11**| Capacitores Electrolíticos | $1\ \mu\text{F}$, $10\ \mu\text{F}$, $100\ \mu\text{F}$[cite: 8, 11, 15] | 3 | ¡Los tienes! (Para etapas de audio) |
+| **12**| Capacitores Cerámicos | Tipo lenteja ($10\text{ nF}$ y $100\text{ nF}$) | 4 | **¡FALTA COMPRAR!** (Para RF y filtros)[cite: 3, 5] |
+| **13**| Fuente de Poder | 2x Baterías de 9V + Clips | 2 | Las tiene tu compañero (Para fuente dual $\pm 9\text{V}$)[cite: 5, 7] |
+| **14**| Conexiones | Cables Jumper o UTP | 1 set | **¡FALTA COMPRAR!** |
