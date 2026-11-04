@@ -417,17 +417,21 @@
       .sidebar { position: static; }
       .eq-grid { grid-template-columns: 1fr; }
     }
+    .real-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .real-table th, .real-table td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    .real-table th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+    .real-table td:nth-child(2) { font-family: "Roboto Mono", ui-monospace, monospace; white-space: nowrap; }
   </style>
 </head>
 <body>
   <header>
     <div>
       <h1>Simulación de modulación de amplitud</h1>
-      <p>Modelo matemático y detector de envolvente</p>
+      <p>Modelo matemático y detector de envolvente · Las frecuencias están en escala didáctica (Hz) para que las ondas se vean; los valores reales del montaje están en la Fase B</p>
     </div>
     <nav class="tabs" aria-label="Fases del sistema">
       <button type="button" class="tab active" id="tab-a">Fase A: Modelo matemático</button>
-      <button type="button" class="tab" id="tab-b">Fase B: Implementación hardware</button>
+      <button type="button" class="tab" id="tab-b">Fase B: Detector y valores reales</button>
     </nav>
     <div class="header-meta" id="header-meta">μ = —</div>
   </header>
@@ -537,20 +541,20 @@
       <section class="panel diagram-panel">
         <h2 class="panel-title">Diagrama de bloques</h2>
         <div class="chain">
-          <div class="block" tabindex="0" data-tip="Genera la señal moduladora vm(t): el tono o la voz de baja frecuencia que se va a transmitir.">
-            <strong>Oscilador de audio</strong>
-            <em>mensaje vm(t)</em>
+          <div class="block" tabindex="0" data-tip="El micrófono electret capta la voz y el LM358 la sube a un nivel útil. Esta es la señal mensaje vm(t).">
+            <strong>Micrófono + preamp</strong>
+            <em>mensaje vm(t) · LM358</em>
           </div>
           <div class="arrow"></div>
           <div class="mod-wrap">
-            <div class="block" tabindex="0" data-tip="Genera la portadora vc(t), una senoide estable de frecuencia fc. Entra al modulador por la vía de RF.">
+            <div class="block" tabindex="0" data-tip="Genera la portadora vc(t), una onda estable de 1 MHz hecha con el cristal de 1 MHz y el transistor 2N2222.">
               <strong>Oscilador RF</strong>
-              <em>portadora vc(t)</em>
+              <em>portadora 1 MHz</em>
             </div>
             <div class="v-arrow"></div>
-            <div class="block" tabindex="0" data-tip="Multiplica el mensaje por la portadora. La amplitud de la RF sigue a vm(t) y a la salida se obtiene vAM(t).">
+            <div class="block" tabindex="0" data-tip="El CA3080 le suma un nivel fijo a la voz y después lo multiplica por la portadora: [Vc + vm(t)]·cos(2πfc t). Gracias a ese nivel fijo la portadora nunca se apaga y el detector puede recuperar la voz.">
               <strong>Modulador</strong>
-              <em>entra la RF</em>
+              <em>CA3080 · suma + multiplica</em>
             </div>
           </div>
           <div class="arrow"></div>
@@ -559,9 +563,9 @@
             <em>medio de transmisión</em>
           </div>
           <div class="arrow"></div>
-          <div class="block" tabindex="0" data-tip="Filtro pasa banda sintonizado en fc. Deja pasar la señal AM y atenúa las frecuencias ajenas a la portadora.">
+          <div class="block" tabindex="0" data-tip="Filtro LC sintonizado en 1 MHz (bobina de 100 µH + condensador de unos 250 pF). Deja pasar nuestra señal y frena el resto.">
             <strong>Filtro RF</strong>
-            <em>pasa banda</em>
+            <em>pasa banda LC</em>
           </div>
           <div class="arrow"></div>
           <div class="block hot" tabindex="0" data-tip="El diodo recorta la semionda negativa. El capacitor se carga en los picos y se descarga por R con τ = RC, recuperando la envolvente.">
@@ -569,13 +573,30 @@
             <em>diodo + RC</em>
           </div>
           <div class="arrow"></div>
-          <div class="block" tabindex="0" data-tip="Aumenta la potencia de la señal recuperada para poder excitar el parlante.">
+          <div class="block" tabindex="0" data-tip="El LM386 le da fuerza a la voz recuperada para mover el parlante de 8 Ω. Va conectado entre +9 V y tierra, nunca al −9 V.">
             <strong>Amplificador</strong>
-            <em>audio de salida</em>
+            <em>LM386 + parlante</em>
           </div>
         </div>
       </section>
 
+
+      <section class="panel math-panel">
+        <h2 class="panel-title">Valores reales del montaje</h2>
+        <p class="regime-detail" style="margin:0 0 10px">Las gráficas usan frecuencias pequeñas para que se puedan ver. En la protoboard estos son los valores que usamos de verdad.</p>
+        <table class="real-table">
+          <thead><tr><th>Parte</th><th>Valor en el circuito</th><th>Por qué</th></tr></thead>
+          <tbody>
+            <tr><td>Portadora f<sub>c</sub></td><td>1 MHz (cristal de 1 MHz)</td><td>Cae en la banda AM (530–1700 kHz), así que se puede probar con un radio AM normal</td></tr>
+            <tr><td>Mensaje f<sub>m</sub></td><td>Voz: 300 Hz – 3 kHz</td><td>Rango típico de la voz en telefonía</td></tr>
+            <tr><td>Ancho de banda</td><td>B = 2·f<sub>m</sub> ≈ 6 kHz</td><td>Una banda lateral a cada lado de la portadora</td></tr>
+            <tr><td>Índice μ</td><td>Entre 0.5 y 0.8</td><td>Con μ &gt; 1 hay sobremodulación y la voz sale distorsionada</td></tr>
+            <tr><td>Detector R</td><td>10 kΩ (potenciómetro B10K)</td><td>Se ajusta a mano mientras se mira el osciloscopio</td></tr>
+            <tr><td>Detector C</td><td>2.2 nF → τ = 22 µs</td><td>Tiene que cumplir 1/f<sub>c</sub> = 1 µs ≪ τ ≤ √(1−μ²)/(2π f<sub>m</sub> μ) ≈ 26 µs (μ = 0.9, 3 kHz)</td></tr>
+            <tr><td>Filtro LC</td><td>L = 100 µH, C ≈ 253 pF</td><td>f<sub>0</sub> = 1/(2π√LC) ≈ 1.00 MHz</td></tr>
+          </tbody>
+        </table>
+      </section>
       <section class="panel math-panel">
         <h2 class="panel-title">Detector</h2>
         <div class="eq-grid">
