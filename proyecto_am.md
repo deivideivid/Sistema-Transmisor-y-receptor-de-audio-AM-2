@@ -1,47 +1,74 @@
 # Diseño e Implementación de un Sistema Transmisor y Receptor de Audio AM
 
 **Materia:** Teoría de Señales
-**Fecha:** 19 de Octubre de 2026
+**Fecha:** 19 de octubre de 2026
 **Ubicación:** Manizales, Caldas, Colombia
 
 ---
 
 ## 1. Introducción
-En el estudio de las telecomunicaciones y el procesamiento de señales, la modulación de amplitud (AM) es una de las técnicas fundamentales que permite la transmisión de información a largas distancias. Este proyecto semestral tiene como propósito el diseño, análisis e implementación de un Sistema Transmisor y receptor de audio AM. En la práctica, esto implica trasladar el espectro de frecuencias de una señal de audio (la señal moduladora o mensaje) hacia una frecuencia mucho más alta (la señal portadora), lo que hace posible su radiación y propagación electromagnética. A lo largo del curso de Teoría de Señales, este proyecto servirá para materializar los modelos matemáticos y el análisis espectral en un sistema real. El desarrollo del trabajo abarcará todas las etapas críticas del proceso de comunicación: desde la captación y acondicionamiento de la voz, pasando por el proceso de modulación, hasta su posterior recepción, demodulación (mediante detector de envolvente) y amplificación final; todo con el objetivo de recuperar la información original con la menor pérdida y distorsión posible.
+La modulación de amplitud (AM) es una de las técnicas base de las telecomunicaciones. La idea es sencilla: una señal de audio, como la voz, no se puede mandar sola muy lejos, entonces la "montamos" sobre una onda de frecuencia mucho más alta, llamada portadora. Esa onda rápida es la que viaja, y en el otro extremo se le quita la portadora para quedarnos otra vez con la voz.
 
-## 2. Objetivo General
-Diseñar, analizar e implementar un Sistema Transmisor y receptor de audio AM, aplicando los modelos matemáticos y físicos de la Teoría de Señales para lograr la modulación, transmisión y correcta recuperación de una señal de audio analógica.
+En este proyecto vamos a diseñar, analizar y armar un sistema transmisor y receptor de audio AM en protoboard. La idea es llevar a un circuito real lo que vemos en clase de Teoría de Señales: el modelo matemático de la señal AM, su espectro y el detector de envolvente. El sistema cubre todo el recorrido: captar la voz con un micrófono, amplificarla, modularla, transmitirla, recibirla, demodularla y escucharla en un parlante, tratando de que la voz llegue con la menor distorsión posible.
 
-## 3. Objetivos Específicos
-*   **Analizar el comportamiento espectral:** Modelar matemáticamente las señales en el dominio del tiempo y de la frecuencia durante los procesos de modulación y demodulación AM, verificando el cumplimiento de la teoría.
-*   **Diseñar las etapas de transmisión y recepción:** Dimensionar y establecer los requerimientos de los circuitos correspondientes al oscilador de la portadora, el modulador, el filtro pasa banda, el detector de envolvente y los amplificadores de audio.
-*   **Implementar y sintonizar el sistema:** Construir los circuitos diseñados ajustando el índice de modulación para evitar fenómenos de sobremodulación.
-*   **Evaluar el rendimiento:** Comparar y medir las características de la señal de audio original frente a la señal recuperada en el receptor, analizando factores como el ruido, el ancho de banda y la fidelidad de la señal.
+## 2. Objetivo general
+Diseñar, analizar e implementar un sistema transmisor y receptor de audio AM, aplicando los modelos matemáticos de la Teoría de Señales para modular, transmitir y recuperar correctamente una señal de audio analógica.
 
----
-
-## 4. Propuesta Técnica Recomendada: "Híbrido de IC y Discretos"
-Esta propuesta equilibra costo, facilidad de implementación en protoboard y valor didáctico, basándose en la bibliografía clásica de sistemas de comunicaciones electrónicas[cite: 5, 8]. Consiste en utilizar un circuito integrado (IC) para la modulación (asegurando precisión matemática) y componentes discretos simples para la demodulación.
-
-### 4.1. Transmisor (Modulador AM)
-*   **Micrófono / Generador de Mensaje:** Capta la señal de audio de baja frecuencia[cite: 6, 8]. Se puede usar un micrófono propio preamplificado o inyectado mediante un condensador.
-*   **Preamplificador de Audio:** Eleva la amplitud de la señal de voz a un nivel de voltaje útil (ej. **LM358**, **TL072**, o transistores BJT como **2N3904** / **2N2222**)[cite: 8].
-*   **Oscilador de Portadora de RF:** Genera la señal de alta frecuencia[cite: 6, 8, 9]. Para pruebas iniciales, se puede usar un generador de señales de laboratorio (ej. a 1 MHz o 5 MHz)[cite: 5]. Para la implementación final, se sugiere un oscilador controlado por **Cristal de Cuarzo de 1 MHz** con un transistor **2N2222**[cite: 7].
-*   **Modulador (Multiplicador Analógico):** Realiza la multiplicación de la señal portadora por la señal de mensaje[cite: 6, 8, 9]. Se recomienda el chip **CA3080** (Amplificador de Transconductancia Operacional) por su facilidad de uso en protoboard[cite: 8]. Alternativas: **AD633**, **MC1496** o **LM1496** (requieren más configuración externa).
-
-### 4.2. Receptor (Demodulador / Detector de Envolvente)
-*   **Filtro Pasa Banda / Antena:** Capta y selecciona la frecuencia portadora específica[cite: 4, 9, 11]. Se construye con un arreglo LC (inductor y condensador).
-*   **Diodo Detector:** Corta la mitad inferior de la señal modulada (rectificación de media onda)[cite: 5, 9]. Es crucial usar un diodo de baja caída de voltaje (0.2V - 0.3V), como los de Germanio (**1N34A**) o Schottky (**1N5711**, **BAT41**)[cite: 5]. Un diodo de silicio estándar (1N4148) es menos sensible[cite: 5].
-*   **Filtro Pasa-Bajos (RC):** Un conjunto de potenciómetro (ej. 10 kΩ o 100 kΩ) y condensador cerámico/poliéster (ej. 1nF, 10nF, 100nF) que "suaviza" los picos de RF y recupera la forma de onda de baja frecuencia original[cite: 5, 7, 8, 9].
-*   **Amplificador de Audio:** Eleva la potencia de la señal recuperada[cite: 4]. Se recomienda el integrado **LM386**.
-*   **Bocina / Parlante:** Convierte la señal eléctrica en sonido[cite: 4]. Se puede usar un parlante pequeño de 8 Ω[cite: 5].
+## 3. Objetivos específicos
+*   **Analizar el comportamiento espectral:** modelar las señales en el tiempo y en la frecuencia durante la modulación y la demodulación AM, y comprobar que se cumple la teoría.
+*   **Diseñar las etapas de transmisión y recepción:** calcular los valores de los circuitos del oscilador de la portadora, el modulador, el filtro pasa banda, el detector de envolvente y los amplificadores de audio.
+*   **Implementar y sintonizar el sistema:** armar los circuitos y ajustar el índice de modulación para que no haya sobremodulación.
+*   **Evaluar el rendimiento:** comparar la señal de audio original con la recuperada en el receptor, mirando el ruido, el ancho de banda y la fidelidad de la señal.
 
 ---
 
-## 5. Simulación Lógica del Sistema (Paso a Paso)
-1.  **Generación:** Se produce una onda senoidal lenta (voz/mensaje, ej. 1 kHz)[cite: 6, 8] y una onda senoidal rápida y estable (portadora, ej. 1 MHz)[cite: 6, 8].
-2.  **Modulación:** El chip multiplicador (CA3080) combina ambas señales. La amplitud de la portadora rápida de 1 MHz varía siguiendo el contorno de la señal lenta de 1 kHz, creando la "envolvente"[cite: 6, 8, 10]. Se ajusta el índice de modulación para evitar sobremodulación[cite: 10].
-3.  **Transmisión:** La señal modulada viaja por el canal (cable jumper en protoboard o antena real)[cite: 8].
-4.  **Selección:** El filtro pasa banda del receptor elimina frecuencias no deseadas, dejando solo la señal alrededor de 1 MHz[cite: 9].
-5.  **Detección (Demodulación):** El diodo (1N34A) elimina la parte negativa de la señal de RF[cite: 5, 9]. El circuito RC se carga en los picos de RF y se descarga lentamente, "dibujando" la envolvente y eliminando la alta frecuencia[cite: 5, 8, 9]. La salida es la onda original de 1 kHz[cite: 5, 8, 9].
-6.  **Reproducción:** La señal demodulada se amplifica (LM386) y se envía al parlante[cite: 4].
+## 4. Modelo matemático
+Si la voz (mensaje) es $v_m(t) = V_m\cos(2\pi f_m t)$ y la portadora es $v_c(t) = V_c\cos(2\pi f_c t)$, la señal AM queda:
+
+$$v_{AM}(t) = \big[V_c + v_m(t)\big]\cos(2\pi f_c t)$$
+
+Ojo: el modulador **no solo multiplica**. Primero le **suma un nivel fijo** ($V_c$) a la voz y después multiplica por la portadora. Si solo multiplicara, la portadora se apagaría cada vez que la voz pasa por cero y el detector de envolvente no podría recuperar nada.
+
+El índice de modulación es $\mu = V_m / V_c$. Tiene que quedar entre 0 y 1; si pasa de 1 hay **sobremodulación** y la voz sale distorsionada.
+
+Al desarrollar la expresión aparecen tres componentes en el espectro: la portadora en $f_c$ y dos bandas laterales en $f_c - f_m$ y $f_c + f_m$, cada una con amplitud $\mu V_c/2$. El ancho de banda es $B = 2f_m$.
+
+---
+
+## 5. Propuesta técnica: "Híbrido de IC y discretos"
+Usamos un circuito integrado para la modulación (más preciso y fácil de controlar) y componentes discretos sencillos para la demodulación. Así el proyecto es barato, cabe en una protoboard y se ve claramente cada etapa.
+
+**Valores de diseño:** portadora de **1 MHz**, voz entre **300 Hz y 3 kHz**, índice de modulación entre **0.5 y 0.8**.
+
+¿Por qué 1 MHz? Porque cae dentro de la banda AM comercial (530–1700 kHz), así que podemos probar el transmisor con un radio AM normal antes de tener listo el receptor. Además, a esa frecuencia el CA3080 y la protoboard todavía se comportan bien.
+
+### 5.1. Transmisor
+*   **Micrófono electret:** capta la voz. Necesita una resistencia de alimentación (entre 2.2 kΩ y 10 kΩ) y un condensador para pasar la señal a la siguiente etapa.
+*   **Preamplificador (LM358):** sube la voz a un nivel útil. En este punto también se ajusta cuánta voz entra al modulador, o sea, el índice de modulación.
+*   **Oscilador de portadora (cristal de 1 MHz + 2N2222):** genera la onda rápida y estable de 1 MHz. Para las primeras pruebas se puede reemplazar por el generador de señales del laboratorio.
+*   **Modulador (CA3080):** la portadora entra por las entradas del chip, pero bastante reducida con un divisor de voltaje, porque el CA3080 solo acepta unos pocos milivoltios. La voz, sumada a una corriente fija, entra por el pin de control (pin 5). A la salida queda la señal AM.
+
+### 5.2. Receptor
+*   **Filtro pasa banda LC:** una bobina de 100 µH con un condensador de unos 250 pF, sintonizados en 1 MHz. Deja pasar nuestra señal y frena las demás.
+*   **Diodo detector:** deja pasar solo la mitad positiva de la señal. Lo ideal es un diodo de germanio (1N34A) o Schottky (BAT41, 1N5711). Como la señal llega por cable y con buena amplitud, un 1N4148 también funciona.
+*   **Filtro pasa bajos RC:** un potenciómetro de 10 kΩ con un condensador de 2.2 nF ($\tau \approx 22\ \mu s$). El condensador se carga en cada pico de la portadora y se descarga despacio por la resistencia, y así va "dibujando" la envolvente, que es la voz.
+*   **Buffer (segundo LM358):** separa el detector del amplificador para que el amplificador no le "robe" señal al filtro RC.
+*   **Amplificador de audio (LM386):** le da potencia a la voz recuperada. Se alimenta entre +9 V y tierra.
+*   **Parlante de 8 Ω:** convierte la señal eléctrica en sonido.
+
+### 5.3. Alimentación
+Usamos dos baterías de 9 V en serie para tener **+9 V, 0 V (tierra) y −9 V**. El CA3080 usa +9 V y −9 V. El LM386 va **solo entre +9 V y tierra**, porque no aguanta los 18 V que hay entre +9 V y −9 V.
+
+---
+
+## 6. Cómo funciona el sistema paso a paso
+1.  **Captura:** el micrófono capta la voz y el LM358 la amplifica.
+2.  **Portadora:** el oscilador de cristal genera una onda estable de 1 MHz.
+3.  **Modulación:** el CA3080 hace que la amplitud de la portadora suba y baje siguiendo la forma de la voz. Ese contorno es la envolvente. Se ajusta $\mu$ para que no pase de 1.
+4.  **Transmisión:** la señal AM viaja por un cable (o una antena corta) hasta el receptor.
+5.  **Selección:** el filtro LC deja pasar solo lo que está alrededor de 1 MHz.
+6.  **Detección:** el diodo corta la parte negativa y el filtro RC sigue los picos, quitando la portadora y dejando la voz.
+7.  **Reproducción:** el LM386 amplifica la voz recuperada y la manda al parlante.
+
+## 7. Cómo vamos a evaluar el sistema
+Con el osciloscopio del laboratorio vamos a comparar la señal del micrófono (entrada) con la que llega al parlante (salida), medir el índice de modulación directamente en la envolvente y revisar el espectro de la señal AM para ver la portadora y las dos bandas laterales.
