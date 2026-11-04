@@ -31,13 +31,29 @@
 | **2** | Micrófono | Electret con cables (rojo/negro)[cite: 17] | 1 | ¡Lo tienes! |
 | **3** | Preamplificador | IC **LM358P** (8 pines)[cite: 18] | 2 | ¡Los tienes! |
 | **4** | Modulador AM | IC **CA3080E** (8 pines)[cite: 20, 26] | 1 | ¡Lo tienes! |
-| **5** | Amplificador Audio | IC **LM386N-1** (8 pines) + Parlante[cite: 16] | 1 | ¡Lo tienes! |
-| **6** | Oscilador RF | Transistor **2N2222A** + Cristal de **20 MHz**[cite: 12, 19] | 2 / 1 | ¡Lo tienes! |
-| **7** | Diodo Detector | Germanio (1N34A) o Schottky (1N5819) | 1 | Lo tiene tu compañero[cite: 3, 5] |
-| **8** | Diodos de Silicio | 2x **1N4148** (vidrio)[cite: 13] | 2 | ¡Los tienes! |
-| **9** | Potenciómetros | **B10K** ($10\text{ k}\Omega$) y **B100K** ($100\text{ k}\Omega$)[cite: 7, 9, 10] | 2 | ¡Los tienes! |
-| **10**| Resistencias fijas | $1\text{ k}\Omega$ (x3), $10\text{ k}\Omega$ (x4), $100\text{ k}\Omega$ (x3)[cite: 14] | 10 | **¡FALTA COMPRAR!** |
-| **11**| Capacitores Electrolíticos | $1\ \mu\text{F}$, $10\ \mu\text{F}$, $100\ \mu\text{F}$[cite: 8, 11, 15] | 3 | ¡Los tienes! (Para etapas de audio) |
-| **12**| Capacitores Cerámicos | Tipo lenteja ($10\text{ nF}$ y $100\text{ nF}$) | 4 | **¡FALTA COMPRAR!** (Para RF y filtros)[cite: 3, 5] |
-| **13**| Fuente de Poder | 2x Baterías de 9V + Clips | 2 | Las tiene tu compañero (Para fuente dual $\pm 9\text{V}$)[cite: 5, 7] |
-| **14**| Conexiones | Cables Jumper o UTP | 1 set | **¡FALTA COMPRAR!** |
+| **5** | Amplificador Audio | IC **LM386N-1** (8 pines)[cite: 16] | 1 | ¡Lo tienes! |
+| **6** | Altavoz / Parlante | Dinámico de 8 Ω (Stetron LS19C050) | 1 | ¡Lo tienes! (Salida final de audio) |
+| **7** | Oscilador RF | Transistor **2N2222A** + Cristal de **20 MHz**[cite: 12, 19] | 2 / 1 | ¡Lo tienes! |
+| **8** | Diodo Detector | Germanio (1N34A) o Schottky (1N5819) | 1 | Lo tiene tu compañero[cite: 3, 5] |
+| **9** | Diodos de Silicio | 2x **1N4148** (vidrio)[cite: 13] | 2 | ¡Los tienes! |
+| **10**| Potenciómetros | **B10K** ($10\text{ k}\Omega$) y **B100K** ($100\text{ k}\Omega$)[cite: 7, 9, 10] | 2 | ¡Lo tienes! |
+| **11**| Resistencias fijas | $1\text{ k}\Omega$ (x3), $10\text{ k}\Omega$ (x4), $100\text{ k}\Omega$ (x3)[cite: 14] | 10 | **¡FALTA COMPRAR!** |
+| **12**| Capacitores Electrolíticos | $1\ \mu\text{F}$, $10\ \mu\text{F}$, $100\ \mu\text{F}$[cite: 8, 11, 15] | 3 | ¡Los tienes! (Para etapas de audio) |
+| **13**| Capacitores Cerámicos | Tipo lenteja ($10\text{ nF}$ y $100\text{ nF}$) | 4 | **¡FALTA COMPRAR!** (Para RF y filtros)[cite: 3, 5] |
+| **14**| Fuente de Poder | 2x Baterías de 9V + Clips | 2 | Las tiene tu compañero (Para fuente dual $\pm 9\text{V}$)[cite: 5, 7] |
+| **15**| Conexiones | Cables Jumper o UTP | 1 set | **¡FALTA COMPRAR!** |
+
+
+# 🛒 Lista de Compras Final (Tienda de Electrónica)
+
+1. **Resistencias (1/4 de vatio, comunes):**
+   * Tres (3) resistencias de **1 kΩ** (Café-Negro-Rojo).
+   * Cuatro (4) resistencias de **10 kΩ** (Café-Negro-Naranja).
+   * Tres (3) resistencias de **100 kΩ** (Café-Negro-Amarillo).
+
+2. **Capacitores Cerámicos ("Tipo lenteja", no polarizados):**
+   * Dos (2) capacitores de **100 nF** (Código 104).
+   * Dos (2) capacitores de **10 nF** (Código 103).
+
+3. **Cables y Conexiones:**
+   * Un (1) paquete de **Cables Jumper** macho-macho para protoboard (o un metro de cable UTP de red).
