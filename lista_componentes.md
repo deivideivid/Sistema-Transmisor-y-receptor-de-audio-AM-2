@@ -1,59 +1,63 @@
-# Lista de Componentes para el Proyecto AM
+# Lista de Componentes — Sistema Transmisor y Receptor AM
 
-## 1. Etapa de Transmisión
+**Estado:** ✅ Lo tenemos · 🛒 Falta comprar · ⚠️ No sirve / sobra · 🤝 Lo tiene el compañero
 
-*   **Preamplificador de Audio:**
-    *   **Opción principal:** **LM358** o TL072.
-    *   *Alternativa:* Transistores 2N3904 o 2N2222.
-*   **Oscilador de Portadora (RF):**
-    *   **Opción principal:** **Cristal de Cuarzo de 20 MHz** y **transistor 2N2222**.
-*   **Modulador (Multiplicador):**
-    *   **Opción principal:** **CA3080.**
-    *   *Alternativas:* AD633, MC1496 o LM1496.
+Cada componente tiene un link a Google Imágenes para ver cómo es físicamente.
 
-## 2. Etapa de Recepción
+---
 
-*   **Diodo Detector (Detector de Envolvente):**
-    *   **Opción principal:** 1N34A (Germanio) o 1N5711, BAT41, **1N5819** (Schottky).
-    *   *Alternativa:* 1N4148 (Silicio - menos recomendado por su mayor caída de voltaje).
-*   **Filtro Pasa-Bajos (RC):**
-    *   **Componentes necesarios:** Potenciómetro (ej.**10 kΩ o 100 kΩ** ) y capacitores (**1 nF, 10 nF, 100 nF**).
-*   **Amplificador de Audio Final:**
-    *   **Opción principal:** **LM386.**
+## 1. Lo que ya tenemos y sí sirve
 
-**Nota:** Vamos a utilizar un micrófono electret y una bocina/parlante (8 Ω) para el proyecto.
+| # | Componente | Referencia | Cant. | Estado | Para qué se usa | Imagen |
+| :-- | :-- | :-- | :-: | :-: | :-- | :-- |
+| 1 | Protoboard | MB-102, 830 puntos | 1 | ✅ | Montar todo el sistema | [Ver](https://www.google.com/search?tbm=isch&q=protoboard+MB-102+830+puntos) |
+| 2 | Micrófono | Electret con cables | 1 | ✅ | Captar la voz | [Ver](https://www.google.com/search?tbm=isch&q=microfono+electret+con+cables) |
+| 3 | Amplificador operacional | LM358P (8 pines) | 2 | ✅ | Uno de preamplificador en el TX y otro de buffer en el RX | [Ver](https://www.google.com/search?tbm=isch&q=LM358P+DIP-8) |
+| 4 | Modulador | CA3080E (8 pines) | 1 | ✅ | Hacer la modulación AM | [Ver](https://www.google.com/search?tbm=isch&q=CA3080E+DIP-8) |
+| 5 | Amplificador de audio | LM386N-1 (8 pines) | 1 | ✅ | Darle fuerza a la voz para el parlante | [Ver](https://www.google.com/search?tbm=isch&q=LM386N-1+DIP-8) |
+| 6 | Parlante | 8 Ω (Stetron LS19C050) | 1 | ✅ | Salida de sonido | [Ver](https://www.google.com/search?tbm=isch&q=parlante+8+ohm+pequeño) |
+| 7 | Transistor | 2N2222A | 2 | ✅ | Oscilador de la portadora | [Ver](https://www.google.com/search?tbm=isch&q=transistor+2N2222A) |
+| 8 | Diodo de silicio | 1N4148 | 2 | ✅ | Detector de envolvente (plan A, funciona bien porque la señal llega por cable) | [Ver](https://www.google.com/search?tbm=isch&q=diodo+1N4148) |
+| 9 | Diodo detector | 1N34A (germanio) o 1N5819 (Schottky) | 1 | 🤝 | Detector de envolvente (para comparar con el 1N4148) | [Ver](https://www.google.com/search?tbm=isch&q=diodo+1N34A+germanio) |
+| 10 | Potenciómetro | B10K (10 kΩ) | 1 | ✅ | Resistencia del filtro RC del detector | [Ver](https://www.google.com/search?tbm=isch&q=potenciometro+B10K) |
+| 11 | Potenciómetro | B100K (100 kΩ) | 1 | ✅ | Ajustar el índice de modulación en el CA3080 | [Ver](https://www.google.com/search?tbm=isch&q=potenciometro+B100K) |
+| 12 | Condensadores electrolíticos | 1 µF, 10 µF, 100 µF | 1 c/u | ✅ | Pasar audio entre etapas (no alcanzan, ver compras) | [Ver](https://www.google.com/search?tbm=isch&q=condensador+electrolitico+10uF) |
+| 13 | Baterías + broches | 9 V | 2 | 🤝 | Fuente de +9 V / 0 V / −9 V | [Ver](https://www.google.com/search?tbm=isch&q=bateria+9V+con+broche) |
 
+## 2. Lo que no sirve o sobra
 
+| Componente | Por qué |
+| :-- | :-- |
+| ⚠️ Cristal de 20 MHz | El CA3080 no alcanza esa velocidad, la protoboard mete mucha interferencia a 20 MHz y no se puede probar con un radio AM. Se cambia por uno de **1 MHz**. Solo se podría reusar con la opción C de la sección 4. |
 
-| # | Componente / Material | Valor o Referencia | Cantidad | Estado actual / Observación |
-| :--- | :--- | :--- | :--- | :--- |
-| **1** | Protoboard | 1 larga (60 pines / 830 puntos) | 1 | ¡Lo tienes! (Suficiente para todo el sistema) |
-| **2** | Micrófono | Electret con cables (rojo/negro)[cite: 17] | 1 | ¡Lo tienes! |
-| **3** | Preamplificador | IC **LM358P** (8 pines)[cite: 18] | 2 | ¡Los tienes! |
-| **4** | Modulador AM | IC **CA3080E** (8 pines)[cite: 20, 26] | 1 | ¡Lo tienes! |
-| **5** | Amplificador Audio | IC **LM386N-1** (8 pines)[cite: 16] | 1 | ¡Lo tienes! |
-| **6** | Altavoz / Parlante | Dinámico de 8 Ω (Stetron LS19C050) | 1 | ¡Lo tienes! (Salida final de audio) |
-| **7** | Oscilador RF | Transistor **2N2222A** + Cristal de **20 MHz**[cite: 12, 19] | 2 / 1 | ¡Lo tienes! |
-| **8** | Diodo Detector | Germanio (1N34A) o Schottky (1N5819) | 1 | Lo tiene tu compañero[cite: 3, 5] |
-| **9** | Diodos de Silicio | 2x **1N4148** (vidrio)[cite: 13] | 2 | ¡Los tienes! |
-| **10**| Potenciómetros | **B10K** ($10\text{ k}\Omega$) y **B100K** ($100\text{ k}\Omega$)[cite: 7, 9, 10] | 2 | ¡Lo tienes! |
-| **11**| Resistencias fijas | $1\text{ k}\Omega$ (x3), $10\text{ k}\Omega$ (x4), $100\text{ k}\Omega$ (x3)[cite: 14] | 10 | **¡FALTA COMPRAR!** |
-| **12**| Capacitores Electrolíticos | $1\ \mu\text{F}$, $10\ \mu\text{F}$, $100\ \mu\text{F}$[cite: 8, 11, 15] | 3 | ¡Los tienes! (Para etapas de audio) |
-| **13**| Capacitores Cerámicos | Tipo lenteja ($10\text{ nF}$ y $100\text{ nF}$) | 4 | **¡FALTA COMPRAR!** (Para RF y filtros)[cite: 3, 5] |
-| **14**| Fuente de Poder | 2x Baterías de 9V + Clips | 2 | Las tiene tu compañero (Para fuente dual $\pm 9\text{V}$)[cite: 5, 7] |
-| **15**| Conexiones | Cables Jumper o UTP | 1 set | **¡FALTA COMPRAR!** |
+---
 
+## 3. 🛒 Lista de compras
 
-# 🛒 Lista de Compras Final (Tienda de Electrónica)
+| # | Componente | Referencia / Código | Cant. | Prioridad | Para qué se usa | Imagen |
+| :-- | :-- | :-- | :-: | :-: | :-- | :-- |
+| 1 | **Cristal de cuarzo** | **1 MHz** (HC-49) | 1 | 🔴 Urgente | Portadora del transmisor | [Ver](https://www.google.com/search?tbm=isch&q=cristal+cuarzo+1MHz+HC-49) |
+| 2 | **Bobina / inductor** | **100 µH** axial (parece una resistencia) | 2 | 🔴 Urgente | Filtro LC del receptor | [Ver](https://www.google.com/search?tbm=isch&q=inductor+axial+100uH) |
+| 3 | Condensadores cerámicos (pF) | 22 pF (22), 100 pF (101), 220 pF (221), 470 pF (471) | 2 c/u | 🔴 Urgente | Oscilador de cristal y filtro LC | [Ver](https://www.google.com/search?tbm=isch&q=condensador+ceramico+220pF+221) |
+| 4 | Condensadores cerámicos | 100 nF (104) | 8 | 🔴 Urgente | Desacople: uno pegado a la alimentación de cada chip | [Ver](https://www.google.com/search?tbm=isch&q=condensador+ceramico+104+100nF) |
+| 5 | Condensadores cerámicos | 1 nF (102), 2.2 nF (222), 4.7 nF (472), 10 nF (103), 47 nF (473) | 2 c/u | 🟠 Necesario | Detector RC (2.2 nF es el principal) y red Zobel del LM386 (47 nF) | [Ver](https://www.google.com/search?tbm=isch&q=condensador+ceramico+222+2.2nF) |
+| 6 | Condensadores electrolíticos | 10 µF ×4, 100 µF ×2, 220 µF ×1 | 7 | 🟠 Necesario | Paso de audio entre etapas, filtro de la fuente, salida al parlante (220 µF) | [Ver](https://www.google.com/search?tbm=isch&q=condensador+electrolitico+220uF+16V) |
+| 7 | **Kit surtido de resistencias** | 1/4 W (que traiga 10 Ω, 100 Ω, 1 k, 2.2 k, 4.7 k, 10 k, 47 k, 100 k) | 1 kit | 🟠 Necesario | Todas las etapas | [Ver](https://www.google.com/search?tbm=isch&q=kit+surtido+resistencias+1%2F4W) |
+| 8 | Potenciómetro | B10K | 1 | 🟠 Necesario | Volumen del LM386 | [Ver](https://www.google.com/search?tbm=isch&q=potenciometro+B10K) |
+| 9 | Cables | Jumpers macho-macho o 1 m de UTP sólido | 1 set | 🟠 Necesario | Conexiones en la protoboard | [Ver](https://www.google.com/search?tbm=isch&q=cables+jumper+macho+macho+protoboard) |
+| 10 | Interruptor | Switch deslizante pequeño | 1 | 🟢 Opcional | Apagar las baterías sin desconectarlas | [Ver](https://www.google.com/search?tbm=isch&q=switch+deslizante+protoboard) |
 
-1. **Resistencias (1/4 de vatio, comunes):**
-   * Tres (3) resistencias de **1 kΩ** (Café-Negro-Rojo).
-   * Cuatro (4) resistencias de **10 kΩ** (Café-Negro-Naranja).
-   * Tres (3) resistencias de **100 kΩ** (Café-Negro-Amarillo).
+> **Tip:** si venden **kit surtido de condensadores cerámicos**, sale más barato y trae casi todos los de las filas 3, 4 y 5.
 
-2. **Capacitores Cerámicos ("Tipo lenteja", no polarizados):**
-   * Dos (2) capacitores de **100 nF** (Código 104).
-   * Dos (2) capacitores de **10 nF** (Código 103).
+---
 
-3. **Cables y Conexiones:**
-   * Un (1) paquete de **Cables Jumper** macho-macho para protoboard (o un metro de cable UTP de red).
+## 4. Alternativas si no conseguimos el cristal de 1 MHz
+
+| Opción | Qué se compra | Dificultad | Ventajas | Desventajas |
+| :-- | :-- | :-: | :-- | :-- |
+| **A. Oscilador de cristal en cajita** | Oscilador de 1 MHz encapsulado (4 pines, DIP-8 o DIP-14) + regulador **7805** para sacar 5 V de la batería de 9 V | Fácil | Ya trae todo adentro, solo se alimenta y saca la onda | Saca onda cuadrada (hay que suavizarla con el filtro LC) y necesita el 7805 · [Ver](https://www.google.com/search?tbm=isch&q=oscilador+cristal+1MHz+DIP) |
+| **B. Oscilador LC (Colpitts)** | Nada extra: se usan el 2N2222, una bobina de 100 µH y condensadores de pF | Media | No necesita cristal y se puede sintonizar en cualquier punto de la banda AM | Es menos estable, la frecuencia "se corre" un poquito con la temperatura |
+| **C. Reusar el cristal de 20 MHz con un divisor** | Chip **74HC04** (para el oscilador) + chip **74HC4040** (divide entre 16) + regulador **7805** | Difícil | 20 MHz ÷ 16 = **1.25 MHz**, dentro de la banda AM y muy estable | Son dos chips más y ocupan espacio en la protoboard |
+| **D. Generador de señales del laboratorio** | Nada | Muy fácil | Perfecto para las primeras pruebas | No es parte del circuito final |
+
+**Recomendación:** buscar primero el cristal de 1 MHz. Si no hay, la **opción A**. Mientras tanto, se prueba con la **opción D**.
