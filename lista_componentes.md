@@ -48,6 +48,12 @@ Cada componente tiene un link a Google Imágenes para ver cómo es físicamente.
 
 ## 3. 🛒 Lista EXACTA del circuito
 
+> **Estado de compras (4 de noviembre de 2026)**
+> - ✅ **3.1 Resistencias:** compradas todas.
+> - ✅ **3.2 Cerámicos:** comprados todos **menos dos**: 🛒 **220 pF (`221`)** y 🛒 **2.2 nF (`222`)**. Mientras se consiguen, hay reemplazos temporales en la tabla 3.2.
+> - ✅ **3.3 Electrolíticos:** comprados todos.
+> - ✅ **3.4:** bobina de 100 µH, potenciómetro B10K y jumpers comprados. En vez del cristal se compró un **resonador cerámico de 1 MHz (`CRB 1.0M`)**, que hace el mismo trabajo (ver 3.4).
+
 Esto es **todo** lo que usa el circuito, ni más ni menos. **Todo va montado al mismo tiempo en la protoboard**: no son escenarios ni combinaciones.
 - **"Usa el circuito"** = cuántas van puestas en la protoboard.
 - **"Comprar"** = lo mismo + 1 de repuesto por si una se daña o se pierde. Si quieren ahorrar, compren exactamente lo de "Usa el circuito".
@@ -63,14 +69,14 @@ Primero revisen qué tienen ya en casa y compren **solo lo que falte**.
 | **TX · Micrófono** | Micrófono, 1 resistencia de 4.7 kΩ, 1 electrolítico de 1 µF |
 | **TX · Preamplificador** | LM358 #1, 1 resistencia de 1 kΩ, 1 de 100 kΩ, 2 cerámicos de 100 nF |
 | **TX · Ajuste de μ** | Potenciómetro B100K, 1 electrolítico de 10 µF, 1 resistencia de 4.7 kΩ |
-| **TX · Oscilador 1 MHz** | 2N2222, cristal de 1 MHz, resistencias de 47 kΩ, 10 kΩ y 1 kΩ, 2 cerámicos de 470 pF, 1 de 10 nF, 1 de 100 nF |
-| **TX · Modulador** | CA3080, resistencias de 10 kΩ + 100 Ω (divisor), 1 de 100 Ω, 1 de 22 kΩ, 1 de 10 kΩ (carga), 2 cerámicos de 100 nF |
+| **TX · Oscilador 1 MHz** | 2N2222, resonador cerámico de 1 MHz, resistencias de 47 kΩ, 10 kΩ y 1 kΩ, 2 cerámicos de 470 pF, 1 de 10 nF, 1 de 100 nF |
+| **TX · Modulador** | CA3080, resistencias de 10 kΩ + 100 Ω (divisor), 1 de 100 Ω, 1 de 10 kΩ (corriente fija), 1 de 10 kΩ (carga), 2 cerámicos de 100 nF |
 | **RX · Filtro LC** | 1 resistencia de 1 kΩ, bobina de 100 µH, cerámicos de 220 pF + 22 pF |
 | **RX · Detector** | Diodo 1N4148, potenciómetro B10K, 1 cerámico de 2.2 nF |
 | **RX · Buffer** | LM358 #2, 2 cerámicos de 100 nF |
 | **RX · Amplificador** | LM386, potenciómetro B10K (volumen), 2 electrolíticos de 10 µF, 1 de 220 µF, 1 resistencia de 10 Ω, 1 cerámico de 47 nF, 1 de 100 nF, parlante |
 
-**Totales montados:** 14 resistencias · 15 cerámicos · 7 electrolíticos · 3 potenciómetros · 4 chips · 1 transistor · 1 cristal · 1 bobina · 1 diodo · micrófono · parlante.
+**Totales montados:** 14 resistencias · 15 cerámicos · 7 electrolíticos · 3 potenciómetros · 4 chips · 1 transistor · 1 resonador de 1 MHz · 1 bobina · 1 diodo · micrófono · parlante.
 
 **¿Por qué tantos de 100 nF?** Cada chip lleva su propio "colchón" pegado a las patas de alimentación, para que los demás chips no le metan ruido por la fuente. Los chips que usan +9 V y −9 V llevan dos (uno por cada lado).
 
@@ -88,19 +94,18 @@ Primero revisen qué tienen ya en casa y compren **solo lo que falte**.
 | 100 Ω | café-negro-café | 2 | 3 | Divisor de entrada del CA3080 | 82 Ω a 150 Ω |
 | 1 kΩ | café-negro-rojo | 3 | 4 | Preamp, oscilador, entrada del RX | 820 Ω a 1.2 kΩ |
 | 4.7 kΩ | amarillo-violeta-rojo | 2 | 3 | Alimentación del micrófono, audio al CA3080 | 3.3 kΩ a 6.8 kΩ |
-| 10 kΩ | café-negro-naranja | 3 | 4 | Oscilador, divisor del CA3080, carga del CA3080 | 8.2 kΩ a 12 kΩ |
-| 22 kΩ | rojo-rojo-naranja | 1 | 2 | Corriente fija del CA3080 (pin 5) | 2 de 10 kΩ en serie (= 20 kΩ) |
-| 47 kΩ | amarillo-violeta-naranja | 1 | 2 | Polarización del oscilador | 2 de 22 kΩ en serie (= 44 kΩ) |
+| 10 kΩ | café-negro-naranja | 4 | 5 | Oscilador, divisor del CA3080, carga del CA3080, corriente fija del CA3080 (pin 5) | 8.2 kΩ a 12 kΩ |
+| 47 kΩ | amarillo-violeta-naranja | 1 | 2 | Polarización del oscilador | 39 kΩ a 56 kΩ |
 | 100 kΩ | café-negro-amarillo | 1 | 2 | Ganancia del preamplificador | 2 de 47 kΩ en serie (= 94 kΩ) |
 
 ### 3.2 Condensadores cerámicos
 
 | Valor | Código | Usa el circuito | Comprar | Dónde va | Si no lo hay, sirve… |
 | :-- | :-- | :-: | :-: | :-- | :-- |
-| 22 pF | `22` o `220` | 1 | 2 | Filtro LC (ajuste fino) | 18 pF a 33 pF |
-| 220 pF | `221` | 1 | 2 | Filtro LC (principal) | Ver tabla de la bobina (3.4) |
+| ✅ 22 pF | `22` o `220` | 1 | 2 | Filtro LC (ajuste fino) | 18 pF a 33 pF |
+| 🛒 **220 pF** | `221` | 1 | 2 | Filtro LC (principal) | **No lo había.** Reemplazo: 2 de 470 pF **en serie** (= 235 pF; hay que comprar 1 de 470 pF más, porque los otros 2 son del oscilador) o 2 de 100 pF (`101`) en paralelo. Ver también la tabla de la bobina (3.4). |
 | 470 pF | `471` | 2 | 3 | Oscilador de cristal | 390 a 560 pF, o 2 de 220 pF en paralelo |
-| 2.2 nF | `222` | 1 | 2 | Detector RC (el condensador que "dibuja" la voz) | 1.5 a 3.3 nF, o 2 de 1 nF (`102`) en paralelo |
+| 🛒 **2.2 nF** | `222` | 1 | 2 | Detector RC (el condensador que "dibuja" la voz) | **No lo había.** Sirve de 1.5 a 3.3 nF, 2 de 1 nF (`102`) en paralelo o 2 de 4.7 nF (`472`) en serie. **Temporal:** el de 10 nF (`103`) que sobra, girando el potenciómetro del detector hasta unos **2.2 kΩ** (así τ sigue siendo ≈ 22 µs). |
 | 10 nF | `103` | 1 | 2 | Saca la portadora del oscilador | 4.7 nF a 22 nF |
 | 47 nF | `473` | 1 | 2 | Red Zobel del LM386 | 33 nF a 100 nF |
 | 100 nF | `104` | 8 | 10 | Desacople: uno pegado a la alimentación de cada chip | 47 nF a 220 nF |
@@ -119,9 +124,16 @@ Primero revisen qué tienen ya en casa y compren **solo lo que falte**.
 | Componente | Referencia | Usa | Comprar | Dónde va | Imagen |
 | :-- | :-- | :-: | :-: | :-- | :-- |
 | **Bobina** | **100 µH** axial (parece una resistencia gordita, colores café-negro-café) o radial tipo tambor (código `101`) | 1 | 2 | Filtro LC del receptor | [Axial](https://www.google.com/search?tbm=isch&q=inductor+axial+100uH) · [Radial](https://www.google.com/search?tbm=isch&q=inductor+radial+100uH+101) |
-| **Cristal** | **1 MHz** (HC-49/U, dice `1.000` o `1.000MHz`) | 1 | 1 | Oscilador de la portadora | [Ver](https://www.google.com/search?tbm=isch&q=cristal+cuarzo+1MHz+HC-49) |
+| ✅ **Resonador cerámico** (en vez del cristal) | **1 MHz**, cuadradito naranja de 2 patas, dice `CRB 1.0M` | 1 | 1 | Oscilador de la portadora (mismos huecos del cristal: I14 e I16) | [Ver](https://www.google.com/search?tbm=isch&q=resonador+ceramico+CRB+1.0M) |
 | Potenciómetro | B10K | 1 | 1 | Volumen del LM386 | [Ver](https://www.google.com/search?tbm=isch&q=potenciometro+B10K) |
-| Cables | Jumpers macho-macho (mínimo 30, ideal un paquete de 40) o 1 m de UTP sólido | 30 | 40 | Conexiones | [Ver](https://www.google.com/search?tbm=isch&q=cables+jumper+macho+macho+protoboard) |
+| Cables | Jumpers macho-macho (el montaje usa 32; ideal un paquete de 40) o 1 m de UTP sólido | 32 | 40 | Conexiones | [Ver](https://www.google.com/search?tbm=isch&q=cables+jumper+macho+macho+protoboard) |
+
+
+**Sobre el resonador cerámico `CRB 1.0M`:**
+- Es **primo del cristal**: también es un "diapasón" que vibra a 1 MHz, pero hecho de cerámica en vez de cuarzo. Es un poco menos exacto (±0.5 %, o sea entre 995 y 1005 kHz), y para AM eso **no importa**.
+- **Tiene 2 patas y no tiene polaridad.** Va exactamente donde iba el cristal (I14 e I16).
+- **Cómo saber si está oscilando sin osciloscopio:** pon un radio AM en **1000 kHz** cerca del circuito. Cuando el oscilador funciona, el ruido del radio **se silencia** (la portadora "tapa" la estática). Mueve un poquito la sintonía si no lo encuentras justo en 1000.
+- **Si no arranca con el 2N2222:** el montaje clásico para resonadores es con un chip **CD4069UB** (funciona directo con 9 V, no necesita regulador) + resistencia de **1 MΩ** + 2 condensadores de **100 pF** (`101`). Esto **solo se compra si hace falta**.
 
 **Si no consiguen bobina de 100 µH**, sirve otra cambiando el condensador del filtro (la fórmula es C [pF] = 25 330 ÷ L [µH] para 1 MHz):
 
@@ -149,6 +161,8 @@ Primero revisen qué tienen ya en casa y compren **solo lo que falte**.
 ---
 
 ## 5. Alternativas si no conseguimos el cristal de 1 MHz
+
+> ✅ **Ya resuelto:** se consiguió un resonador cerámico de 1 MHz (ver 3.4). Esta sección queda como respaldo.
 
 En orden de preferencia. **Ojo:** si la frecuencia final no es exactamente 1 MHz, hay que cambiar el condensador del filtro LC con la fórmula: **C [pF] = 25 330 ÷ (L [µH] × f² [MHz])**.
 
